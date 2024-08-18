@@ -28,9 +28,7 @@ export const register =async (req,res)=>{
     return res.status(500).json({message:"catch error",error:err.stack});
 }
 }
-
 export const login = async(req,res)=>{
-    
     const {email,password} = req.body;
     const user = await userModel.findOne({email});
     if(!user){
@@ -44,5 +42,17 @@ export const login = async(req,res)=>{
 
     const token = await jwt.sign({id:user._id},process.env.LOGINSIGNATURE,{expiresIn:'1h'});
     return res.status(200).json({message:"success",token});    
+}
 
+export const allUsers = async(req,res)=>{
+
+    try{
+
+    const users = await userModel.find().select('userName');
+
+    return res.status(200).json({message:'success',users});
+}
+catch(error){
+    return res.status(500).json({message:"catch error",error:error.stack});
+}
 }
